@@ -9,6 +9,7 @@ public class SpeedMultiplier : MonoBehaviour
     {
         SpeedRatio = 1;
     }
+
     public void AddSpeed(float multiplier)
     {
         if (CanMultiply(multiplier))

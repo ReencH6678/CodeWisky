@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
 public class Thower : MonoBehaviour
@@ -7,28 +8,43 @@ public class Thower : MonoBehaviour
 
     [SerializeField] private float _ellipseRatio;
     [SerializeField] private Vector3 _offset;
-
+    [SerializeField] private Color _debugColor;
     [SerializeField] private EllipseDebuger _ellipseDebuger;
 
     private void Awake()
     {
         _ellipseDebuger = GetComponent<EllipseDebuger>();
 
-        if (_ellipseDebuger != null)
-            _ellipseDebuger.CreateRangeIndicator(_maxThrowDistance, _ellipseRatio, transform, _offset);
     }
 
     public void ThoweObject(IThowen thowerableObject, Vector3 mousePosition)
     {
         IThowen thowerableObjectCopy = Instantiate(thowerableObject.Copy(), transform.position, Quaternion.identity).GetComponent<IThowen>();
-        StartCoroutine(thowerableObjectCopy.Move(transform.position, GetFallPoint(mousePosition)));
+        thowerableObject.Copy().layer = gameObject.layer;
+        StartCoroutine(thowerableObjectCopy.Move(transform.position, GetFallPoint(mousePosition) + _offset));
     }
 
-    private Vector2 GetFallPoint(Vector3 mousePosition)
+    private Vector3 GetFallPoint(Vector3 mousePosition)
     {
-        Vector2 targetPosition = mousePosition - transform.position;
-        float angle = Mathf.Atan2(targetPosition.y, targetPosition.x);
+        return Trigonometry.CalculatePointOnCircle(transform.position, mousePosition, _maxThrowDistance, _ellipseRatio);
+    }
 
-        return new Vector3(Mathf.Cos(angle) * _maxThrowDistance, Mathf.Sin(angle) * _maxThrowDistance * _ellipseRatio) + _offset + transform.position;
+    private void OnDrawGizmos()
+    {
+        int segments = 64;
+        Handles.color = _debugColor;
+
+        Vector3[] points = new Vector3[segments + 1];
+        Vector3 center = transform.position + _offset;
+
+        for (int i = 0; i <= segments; i++)
+        {
+            float angle = 2 * Mathf.PI * i / segments;
+            float x = Mathf.Cos(angle) * _maxThrowDistance;
+            float y = Mathf.Sin(angle) * _maxThrowDistance * _ellipseRatio;
+            points[i] = center + new Vector3(x, y, 0);
+        }
+
+        Handles.DrawAAConvexPolygon(points); // Закрашенный многоугольник
     }
 }

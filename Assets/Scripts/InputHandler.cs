@@ -11,14 +11,16 @@ public class InputHandler : MonoBehaviour
     public Vector2 Direction { get => _direction; private set => _direction = value; }
     private Vector2 _direction = new Vector2();
 
-    public bool IsAttack { get; private set; }
+    public bool IsRightMouseButtonDown { get; private set; }
+    public bool IsLeftMouseButtonDown { get; private set; }
 
     private void Update()
     {
         _direction.x = Input.GetAxis(Horizontal);
         _direction.y = Input.GetAxis(Vertical);
 
-        IsAttack = Input.GetMouseButtonDown(0);
+        IsRightMouseButtonDown = Input.GetMouseButtonDown(1);
+        IsLeftMouseButtonDown = Input.GetMouseButtonDown(0);
     }
 
     public Vector2 GetMouseDirection()
@@ -30,6 +32,7 @@ public class InputHandler : MonoBehaviour
     {
         Vector3 mouseScreenPos = Input.mousePosition;
         mouseScreenPos.z = _camera.WorldToScreenPoint(transform.position).z;
+
         return _camera.ScreenToWorldPoint(mouseScreenPos);
     }
 }

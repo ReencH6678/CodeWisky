@@ -1,13 +1,15 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class Potion : MonoBehaviour, IThowen
+public abstract class Potion : MonoBehaviour, IThowen, IItem
 {
     [SerializeField] private float _maxHeight;
     [SerializeField] private float _flyDuration;
-
+    [SerializeField] private float _effectRadius;
     [SerializeField] private GameObject _shadow;
 
+    protected List<IEffect> _effects = new List<IEffect>();
     private float _startTime;
 
     private void Awake()
@@ -35,8 +37,7 @@ public class Potion : MonoBehaviour, IThowen
             yield return null;
         }
 
-        gameObject.SetActive(false);
-
+        SetEffects();
     }
 
     public GameObject Copy()
@@ -44,19 +45,17 @@ public class Potion : MonoBehaviour, IThowen
         return this.gameObject;
     }
 
-    public void FallDawn()
+    public void SetEffects()
     {
-        throw new System.NotImplementedException();
-    }
+        Collider2D[] targets = Physics2D.OverlapCircleAll(transform.position, _effectRadius);
 
-    public void Fly()
-    {
-        throw new System.NotImplementedException();
-    }
+        foreach (Collider2D target in targets)
+        {
+            if (CanUseOn(target.gameObject))
+                ApplyEffects(target.gameObject);
+        }
 
-    public void GiveEffect()
-    {
-        throw new System.NotImplementedException();
+        Destroy(gameObject);
     }
 
     private Vector2 GetNextPosition(Vector3 startPosition, Vector3 targetPosition, float progress)
@@ -67,4 +66,29 @@ public class Potion : MonoBehaviour, IThowen
         return new Vector2(linearPosition.x, linearPosition.y + height);
     }
 
+    public void Use(GameObject target)
+    {
+        ApplyEffects(target.gameObject);
+    }
+
+    private bool CanUseOn(GameObject target)
+    {
+        bool canUse = false;
+
+        foreach (IEffect effect in _effects)
+            canUse = effect.CanApply(target);
+
+        return canUse;
+    }
+
+    private void ApplyEffects(GameObject target)
+    {
+        if (target.TryGetComponent<IEffectable>(out IEffectable effectable))
+        {
+            foreach (IEffect effect in _effects)
+            {
+                effectable.ReceiveEffect(effect);
+            }
+        }
+    }
 }
