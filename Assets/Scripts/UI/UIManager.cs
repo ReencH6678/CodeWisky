@@ -18,7 +18,10 @@ public class UIManager : MonoBehaviour
     {
         public UIPanelConfigSO config;
         public GameObject gameObject;
-        public bool isActive;
+
+        public bool isActive() {
+            return gameObject.activeInHierarchy;
+        }
     }
 
     private void Awake()
@@ -78,7 +81,7 @@ public class UIManager : MonoBehaviour
         {
             if (panel != null)
             {
-                CreatePanel(_canvas.transform, panel);
+                CreatePanel(_canvas.transform, panel, panel.defaultOpenPanelIndex == 0);
             }
         }
     }
@@ -142,7 +145,7 @@ public class UIManager : MonoBehaviour
 
     public bool IsPanelOpen(string panelName)
     {
-        return TryGetPanelData(panelName, out var panelData) && panelData.isActive;
+        return TryGetPanelData(panelName, out var panelData) && panelData.isActive();
     }
 
     public string[] GetOpenPanels()
@@ -150,7 +153,7 @@ public class UIManager : MonoBehaviour
         var openPanels = new List<string>();
         foreach (var kvp in _panelsByName)
         {
-            if (kvp.Value.isActive)
+            if (kvp.Value.isActive())
             {
                 openPanels.Add(kvp.Value.config.panelName);
             }
@@ -169,12 +172,12 @@ public class UIManager : MonoBehaviour
 
     private void CloseIncompatiblePanels(UIPanelConfigSO targetPanel)
     {
-        if (!targetPanel.HasCompatiblePanels() && targetPanel.GetParentPanel() == null)
+        if (!targetPanel.HasCompatiblePanels())
         {
             // if there are no compatiblePanels
             foreach (var kvp in _panelsByConfig.ToArray())
             {
-                if (kvp.Key != targetPanel)
+                if (kvp.Key != targetPanel && !kvp.Key.forcePanelVisible)
                 {
                     SetPanelVisibility(kvp.Value, false);
                 }
@@ -185,15 +188,15 @@ public class UIManager : MonoBehaviour
             // Only close not compatible panels
             var compatibleSet = new HashSet<UIPanelConfigSO>(targetPanel.compatiblePanels);
             compatibleSet.Add(targetPanel); // the panel is compatible with it self
-            UIPanelConfigSO parentPanel= targetPanel.GetParentPanel();
-            if (parentPanel != null) 
+           
+            if (targetPanel.TryGetParentPanel(out UIPanelConfigSO parentPanel)) 
             {
                 compatibleSet.Add(parentPanel);
             }
 
             foreach (var kvp in _panelsByConfig.ToArray())
             {
-                if (!compatibleSet.Contains(kvp.Key))
+                if (!compatibleSet.Contains(kvp.Key) && !kvp.Key.forcePanelVisible)
                 {
                     SetPanelVisibility(kvp.Value, false);
                 }
@@ -207,9 +210,18 @@ public class UIManager : MonoBehaviour
         {
             panelData.gameObject.SetActive(visibility);
 
-            // Update den Status in beiden Dictionaries
+            // Opens default panel
+            int defaultOpen = panelData.config.defaultOpenPanelIndex - 1;
+            if (defaultOpen >= 0)
+            {
+                string defaultChildPanelName = panelData.config.childPanels[defaultOpen].panelName;
+                if (TryGetPanelData(defaultChildPanelName, out UIPanelData data))
+                {
+                    SetPanelVisibility(data, visibility);
+                }
+            }
+
             var updatedData = panelData;
-            updatedData.isActive = visibility;
 
             string cleanName = CleanName(panelData.config.panelName);
             _panelsByName[cleanName] = updatedData;
@@ -221,7 +233,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void CreatePanel(Transform parent, UIPanelConfigSO panel)
+    private void CreatePanel(Transform parent, UIPanelConfigSO panel, bool isActive)
     {
         if (panel.panelObject == null)
         {
@@ -231,13 +243,12 @@ public class UIManager : MonoBehaviour
 
         GameObject panelGO = Instantiate(panel.panelObject, parent);
         panelGO.name = panel.panelName;
-        panelGO.SetActive(false);
+        panelGO.SetActive(isActive);
 
         var panelData = new UIPanelData
         {
             config = panel,
-            gameObject = panelGO,
-            isActive = false
+            gameObject = panelGO
         };
 
         string cleanName = CleanName(panel.panelName);
@@ -246,17 +257,32 @@ public class UIManager : MonoBehaviour
 
         if (panel.HasChildPanels())
         {
-            CreateChildPanels(panelGO.transform, panel.childPanels);
+            GameObject childGO = new GameObject("ChildContainer");
+
+            childGO.transform.SetParent(panelGO.transform, false);
+
+            RectTransform childRect = childGO.AddComponent<RectTransform>();
+
+            childRect.anchorMin = Vector2.zero;
+            childRect.anchorMax = Vector2.one;
+
+            childRect.offsetMin = Vector2.zero;
+            childRect.offsetMax = Vector2.zero;
+
+            childRect.localScale = Vector3.one;
+            childRect.localPosition = Vector3.zero;
+
+            CreateChildPanels(childGO.transform, panel.childPanels, panel.defaultOpenPanelIndex);
         }
     }
 
-    private void CreateChildPanels(Transform parent, UIPanelConfigSO[] childPanels)
+    private void CreateChildPanels(Transform parent, UIPanelConfigSO[] childPanels, int defaultOpenIndex)
     {
-        foreach (var childPanel in childPanels)
+        for (int i = 0; i < childPanels.Length; i++)
         {
-            if (childPanel != null)
+            if (childPanels[i] != null)
             {
-                CreatePanel(parent, childPanel);
+                CreatePanel(parent, childPanels[i], i == (defaultOpenIndex - 1));
             }
         }
     }
