@@ -1,12 +1,12 @@
 using UnityEngine;
 
-[RequireComponent(typeof(IEffect))]
+[RequireComponent(typeof(Effect))]
 public class DamagePotion : Potion
 {
-    [SerializeField] private IEffect _effect;
+    [SerializeField] private Effect _effect;
 
     private void Awake()
     {
-        _effects.Add(gameObject.GetComponent<IEffect>());
+        _effects.Add(gameObject.GetComponent<Effect>());
     }
 }

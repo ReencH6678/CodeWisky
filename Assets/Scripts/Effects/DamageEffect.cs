@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DamageEffect : IEffect
+public class DamageEffect : Effect
 {
     [SerializeField]private float _damage;
 

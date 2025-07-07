@@ -9,7 +9,7 @@ public abstract class Potion : MonoBehaviour, IThowen, IItem
     [SerializeField] private float _effectRadius;
     [SerializeField] private GameObject _shadow;
 
-    protected List<IEffect> _effects = new List<IEffect>();
+    protected List<Effect> _effects = new List<Effect>();
     private float _startTime;
 
     private void Awake()
@@ -75,7 +75,7 @@ public abstract class Potion : MonoBehaviour, IThowen, IItem
     {
         bool canUse = false;
 
-        foreach (IEffect effect in _effects)
+        foreach (Effect effect in _effects)
             canUse = effect.CanApply(target);
 
         return canUse;
@@ -85,7 +85,7 @@ public abstract class Potion : MonoBehaviour, IThowen, IItem
     {
         if (target.TryGetComponent<IEffectable>(out IEffectable effectable))
         {
-            foreach (IEffect effect in _effects)
+            foreach (Effect effect in _effects)
             {
                 effectable.ReceiveEffect(effect);
             }

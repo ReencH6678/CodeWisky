@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Effector : MonoBehaviour, IEffectable
 {
-    public void ReceiveEffect(IEffect effect)
+    public void ReceiveEffect(Effect effect)
     {
         if (effect.CanApply(gameObject))
             effect.Apply(gameObject);
