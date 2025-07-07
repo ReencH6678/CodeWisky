@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
             _mover.Move(_inputHandler.Direction, _stairController.GetStairMovement(_inputHandler.Direction));
 
         if (_inputHandler.IsLeftMouseButtonDown)
-            _thower.ThoweObject(_throwable.GetComponent<IItem>(), _inputHandler.GetMouseWorldPosition());
+            _thower.ThoweObject(_throwable, _inputHandler.GetMouseWorldPosition());
 
         if (_inputHandler.IsRightMouseButtonDown)
             _throwable.GetComponent<IItem>().Use(this.gameObject);

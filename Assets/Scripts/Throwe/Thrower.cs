@@ -9,12 +9,15 @@ public class Thrower : MonoBehaviour
     [SerializeField] private float _ellipseRatio;
     [SerializeField] private Vector3 _offset;
     [SerializeField] private Color _debugColor;
-
-    public void ThoweObject(IThrowable thowerableObject, Vector3 mousePosition)
+    
+    public void ThoweObject(GameObject thowerableObject, Vector3 targetPosition)
     {
-        IThrowable thowerableObjectCopy = Instantiate(thowerableObject.Copy(), transform.position, Quaternion.identity).GetComponent<IThrowable>();
-        thowerableObject.Copy().layer = gameObject.layer;
-        StartCoroutine(thowerableObjectCopy.Move(transform.position, GetFallPoint(mousePosition) + _offset));
+        if (thowerableObject.TryGetComponent<IThrowable>(out IThrowable throwable))
+        {
+            GameObject thowerableObjectCopy = Instantiate(thowerableObject, transform.position, Quaternion.identity);
+            thowerableObject.layer = gameObject.layer;
+            throwable.StartMove(GetFallPoint(targetPosition));
+        }
     }
 
     private Vector3 GetFallPoint(Vector3 mousePosition)

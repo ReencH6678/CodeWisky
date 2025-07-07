@@ -3,49 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+[RequireComponent(typeof(ThrowerObjectMover))]
 public abstract class Potion : MonoBehaviour, IThrowable
 {
     [SerializeField] private ItemPotionSO _currentPotion;// curryPotion
 
-    [SerializeField] private float _maxHeight;
-    [SerializeField] private float _flyDuration;
     [SerializeField] private float _effectRadius;
-    [SerializeField] private GameObject _shadow;
-
     protected List<Effect> _effects = new List<Effect>();
-    private float _startTime;
+
+    private ThrowerObjectMover _throwerObjectMover;
 
     private void Awake()
     {
-        _startTime = Time.time;
-    }
-
-    public IEnumerator Move(Vector3 startPosition, Vector3 targetPosition)
-    {
-        _startTime = Time.time;
-        float progress;
-        float elapsed;
-
-        while (Time.time - _startTime < _flyDuration)
-        {
-            elapsed = Time.time - _startTime;
-            progress = elapsed / _flyDuration;
-
-            Vector2 nextPosition = GetNextPosition(startPosition, targetPosition, progress);
-            Vector2 shadowPosition = Vector2.Lerp(startPosition, targetPosition, progress);
-
-            _shadow.transform.position = shadowPosition;
-            transform.position = nextPosition;
-
-            yield return null;
-        }
-
-        HandleObjectLanding();
-    }
-
-    public GameObject Copy()
-    {
-        return this.gameObject;
+        _throwerObjectMover = GetComponent<ThrowerObjectMover>();
     }
 
     public void HandleObjectLanding()
@@ -61,12 +31,9 @@ public abstract class Potion : MonoBehaviour, IThrowable
         Destroy(gameObject);
     }
 
-    private Vector2 GetNextPosition(Vector3 startPosition, Vector3 targetPosition, float progress)
+    public void StartMove(Vector2 fallPosition)
     {
-        Vector3 linearPosition = Vector3.Lerp(startPosition, targetPosition, progress);
-        float height = _maxHeight * (progress * 4 * (1 - progress));
-
-        return new Vector2(linearPosition.x, linearPosition.y + height);
+        StartCoroutine(_throwerObjectMover.Move(transform.position, fallPosition));
     }
 
     public void Use(GameObject target)
@@ -94,4 +61,5 @@ public abstract class Potion : MonoBehaviour, IThrowable
             }
         }
     }
+
 }
