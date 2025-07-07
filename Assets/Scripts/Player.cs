@@ -3,17 +3,18 @@ using UnityEngine;
 [RequireComponent(typeof(Mover), typeof(InputHandler), typeof(StairController))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private GameObject _thoweble;
+    [SerializeField] private GameObject _throwable;
 
     private Mover _mover;
     private InputHandler _inputHandler;
-    private Thower _thower;
+    private Thrower _thower;
     private StairController _stairController;
+
     private void Awake()
     {
         _mover = GetComponent<Mover>();
         _inputHandler = GetComponent<InputHandler>();
-        _thower = GetComponent<Thower>();
+        _thower = GetComponent<Thrower>();
         _stairController = GetComponent<StairController>();
     }
 
@@ -23,10 +24,10 @@ public class Player : MonoBehaviour
             _mover.Move(_inputHandler.Direction, _stairController.GetStairMovement(_inputHandler.Direction));
 
         if (_inputHandler.IsLeftMouseButtonDown)
-            _thower.ThoweObject(_thoweble.GetComponent<IItem>(), _inputHandler.GetMouseWorldPosition());
+            _thower.ThoweObject(_throwable.GetComponent<IItem>(), _inputHandler.GetMouseWorldPosition());
 
         if (_inputHandler.IsRightMouseButtonDown)
-            _thoweble.GetComponent<IItem>().Use(this.gameObject);
+            _throwable.GetComponent<IItem>().Use(this.gameObject);
 
     }
 }

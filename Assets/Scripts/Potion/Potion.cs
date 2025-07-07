@@ -1,9 +1,12 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
-public abstract class Potion : MonoBehaviour, IThowen, IItem
+public abstract class Potion : MonoBehaviour, IThrowable
 {
+    [SerializeField] private ItemPotionSO _currentPotion;// curryPotion
+
     [SerializeField] private float _maxHeight;
     [SerializeField] private float _flyDuration;
     [SerializeField] private float _effectRadius;
@@ -37,7 +40,7 @@ public abstract class Potion : MonoBehaviour, IThowen, IItem
             yield return null;
         }
 
-        SetEffects();
+        HandleObjectLanding();
     }
 
     public GameObject Copy()
@@ -45,7 +48,7 @@ public abstract class Potion : MonoBehaviour, IThowen, IItem
         return this.gameObject;
     }
 
-    public void SetEffects()
+    public void HandleObjectLanding()
     {
         Collider2D[] targets = Physics2D.OverlapCircleAll(transform.position, _effectRadius);
 

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f6d5dd6b3b5b0847ad30cf051e67d45, type: 3}
+  m_Name: SettingsCategory1
+  m_EditorClassIdentifier: 
+  panelName: Settings_Category1
+  panelObject: {fileID: 7455879640828038392, guid: fcc5cc8f281853c4a80fd5d00ed66561, type: 3}
+  childPanels: []
+  compatiblePanels:
+  - {fileID: 11400000, guid: 28784efb85db3a24abb44b6c95c04d71, type: 2}
