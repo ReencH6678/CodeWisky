@@ -9,20 +9,21 @@ public class Thrower : MonoBehaviour
     [SerializeField] private float _ellipseRatio;
     [SerializeField] private Vector3 _offset;
     [SerializeField] private Color _debugColor;
-    
-    public void ThoweObject(GameObject thowerableObject, Vector3 targetPosition)
+
+    public void ThroweObject(GameObject thowerableObject, Vector3 targetPosition)
     {
         if (thowerableObject.TryGetComponent<IThrowable>(out IThrowable throwable))
         {
-            GameObject thowerableObjectCopy = Instantiate(thowerableObject, transform.position, Quaternion.identity);
+            thowerableObject.transform.position = transform.position;
+            thowerableObject.transform.rotation = Quaternion.identity;
             thowerableObject.layer = gameObject.layer;
-            throwable.StartMove(GetFallPoint(targetPosition));
+            thowerableObject.GetComponent<IThrowable>().StartMove(GetFallPoint(targetPosition));
         }
     }
 
     private Vector3 GetFallPoint(Vector3 mousePosition)
     {
-        return Trigonometry.CalculatePointOnCircle(transform.position, mousePosition, _maxThrowDistance, _ellipseRatio);
+        return Trigonometry.CalculatePointOnCircle(transform.position + _offset, mousePosition, _maxThrowDistance, _ellipseRatio);
     }
 
     private void OnDrawGizmos()

@@ -95,8 +95,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6179746341904938478}
   - component: {fileID: 1395799520042688637}
-  - component: {fileID: 350117410611479620}
-  - component: {fileID: -7941007553944781307}
+  - component: {fileID: 9143258623100236849}
+  - component: {fileID: 2176278233211338606}
   m_Layer: 6
   m_Name: Circle
   m_TagString: Untagged
@@ -173,7 +173,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &350117410611479620
+--- !u!114 &9143258623100236849
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,15 +182,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 3740485997560539178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f18e75167750e249a1cc08a65e111ee, type: 3}
+  m_Script: {fileID: 11500000, guid: a1d3b9bfa246dfa4487df2f4aa7b27a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHeight: 4
+  _maxHeight: 2
   _flyDuration: 1
-  _effectRadius: 5
   _shadow: {fileID: 505230070461622378}
-  _effect: {fileID: 0}
---- !u!114 &-7941007553944781307
+--- !u!114 &2176278233211338606
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,7 +197,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 3740485997560539178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e25d10e3e632b4b4c99a9e281780b1fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e5191e82e4d01e4ba52f10ca88abc0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1

@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class DamageEffect : Effect
+[CreateAssetMenu(fileName = "newDamageEffect", menuName = "SO/Effect/DamageEffect")]
+public class DamageEffectSO : EffectSO
 {
     [SerializeField]private float _damage;
 

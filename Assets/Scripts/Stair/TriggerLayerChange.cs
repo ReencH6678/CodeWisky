@@ -14,7 +14,7 @@ public class TriggerLayerChange : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent<Mover>(out _))
+        if (collision.TryGetComponent<LayerChanger>(out _))
             collision.gameObject.layer = LayerMask.NameToLayer(_layer.ToString());
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Effect : MonoBehaviour
+public class EffectSO : ScriptableObject
 {
     public string EffectName { get; private set; }
 

@@ -1,7 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class ThrowerObjectMover : MonoBehaviour
 {
@@ -10,6 +9,8 @@ public class ThrowerObjectMover : MonoBehaviour
     private float _startTime;
 
     [SerializeField] private GameObject _shadow;
+
+    public event UnityAction Landed;
 
     private void Awake()
     {
@@ -35,6 +36,8 @@ public class ThrowerObjectMover : MonoBehaviour
 
             yield return null;
         }
+
+        Landed?.Invoke();
     }
 
     private Vector2 GetNextPosition(Vector3 startPosition, Vector3 targetPosition, float progress)

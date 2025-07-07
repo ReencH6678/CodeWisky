@@ -1,21 +1,23 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Mover), typeof(InputHandler), typeof(StairController))]
+[RequireComponent(typeof(ActionContainer))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private GameObject _throwable;
+    [SerializeField] private ItemSO _selectedItem;
 
     private Mover _mover;
     private InputHandler _inputHandler;
     private Thrower _thower;
     private StairController _stairController;
-
+    private ActionContainer _actionContainer;
     private void Awake()
     {
         _mover = GetComponent<Mover>();
         _inputHandler = GetComponent<InputHandler>();
         _thower = GetComponent<Thrower>();
         _stairController = GetComponent<StairController>();
+        _actionContainer = GetComponent<ActionContainer>();
     }
 
     private void Update()
@@ -24,10 +26,12 @@ public class Player : MonoBehaviour
             _mover.Move(_inputHandler.Direction, _stairController.GetStairMovement(_inputHandler.Direction));
 
         if (_inputHandler.IsLeftMouseButtonDown)
-            _thower.ThoweObject(_throwable, _inputHandler.GetMouseWorldPosition());
+        {
+            _selectedItem.Use(_actionContainer, _inputHandler.GetMouseWorldPosition());
+        }
 
         if (_inputHandler.IsRightMouseButtonDown)
-            _throwable.GetComponent<IItem>().Use(this.gameObject);
+            _selectedItem.Consume(_actionContainer);
 
     }
 }

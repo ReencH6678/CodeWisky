@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "new UIPanelConfig", menuName = "UI/UIPanelConfig")]
+[CreateAssetMenu(fileName = "new UIPanelConfig", menuName = "SO/UI/UIPanelConfig")]
 public class UIPanelConfigSO : ScriptableObject
 {
     [Header("Panel Configuration")]

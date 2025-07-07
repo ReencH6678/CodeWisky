@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class ItemSO : ScriptableObject
 {
-    public string itemName;
-    public string description;
+    public string ItemName;
+    public string Description;
     [Space(5)]
-    public GameObject prefab;
-    public Sprite sprite;
-    public bool isConsumable = false;
-
+    public GameObject Prefab;
+    public Sprite Sprite;
+    public bool IsConsumable = false;
+    public bool IsThroweable;
     // schlagen, werfen, ... (action)
-    public virtual void Use(GameObject target) { }
+    public virtual void Use(ActionContainer target, Vector2 direction) {}
+    public virtual void Use(ActionContainer target) {}
     // Essen, Trinken
-    public virtual void Consume(GameObject target) { }
+    public virtual void Consume(ActionContainer target) { }
 }

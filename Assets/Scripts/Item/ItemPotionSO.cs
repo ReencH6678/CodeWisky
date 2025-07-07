@@ -1,18 +1,16 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "new Potion", menuName ="Item/Potion")]
+[CreateAssetMenu(fileName = "new Potion", menuName = "SO/Item/Potion")]
 public class ItemPotionSO : ItemSO
 {
-   [SerializeField] private List<Effect> _effect;
-
-    public override void Use(GameObject target) 
+    [SerializeField] private List<EffectSO> _effect;
+    [SerializeField] private float _effectRadius;
+    public override void Use(ActionContainer useObjectController, Vector2 direction)
     {
-        foreach (var effect in _effect)
-        {
-            effect.Apply(target);
-        }
+        GameObject potion = Instantiate(Prefab);
+        potion.GetComponent<Potion>().SetEffects(_effect).SetRadius(_effectRadius);
+
+        useObjectController.Thrower.ThroweObject(potion, direction);
     }
 }

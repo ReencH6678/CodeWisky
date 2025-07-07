@@ -1,21 +1,38 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System;
 
 [RequireComponent(typeof(ThrowerObjectMover))]
-public abstract class Potion : MonoBehaviour, IThrowable
+public class Potion : MonoBehaviour, IThrowable
 {
-    [SerializeField] private ItemPotionSO _currentPotion;// curryPotion
-
-    [SerializeField] private float _effectRadius;
-    protected List<Effect> _effects = new List<Effect>();
+    private float _effectRadius;
+    protected List<EffectSO> _effects = new List<EffectSO>();
 
     private ThrowerObjectMover _throwerObjectMover;
 
-    private void Awake()
+    private void OnEnable()
     {
         _throwerObjectMover = GetComponent<ThrowerObjectMover>();
+        _throwerObjectMover.Landed += HandleObjectLanding;
+    }
+
+    private void OnDisable()
+    {
+        _throwerObjectMover.Landed -= HandleObjectLanding;
+    }
+
+    public Potion SetEffects(List<EffectSO> effects)
+    {
+        foreach (EffectSO effect in effects)
+            _effects.Add(effect);
+
+        return this;
+    }
+
+    public Potion SetRadius(float radius)
+    {
+        _effectRadius = radius;
+
+        return this;
     }
 
     public void HandleObjectLanding()
@@ -33,7 +50,7 @@ public abstract class Potion : MonoBehaviour, IThrowable
 
     public void StartMove(Vector2 fallPosition)
     {
-        StartCoroutine(_throwerObjectMover.Move(transform.position, fallPosition));
+        StartCoroutine(this._throwerObjectMover.Move(transform.position, fallPosition));
     }
 
     public void Use(GameObject target)
@@ -45,7 +62,7 @@ public abstract class Potion : MonoBehaviour, IThrowable
     {
         bool canUse = false;
 
-        foreach (Effect effect in _effects)
+        foreach (EffectSO effect in _effects)
             canUse = effect.CanApply(target);
 
         return canUse;
@@ -55,7 +72,7 @@ public abstract class Potion : MonoBehaviour, IThrowable
     {
         if (target.TryGetComponent<IEffectable>(out IEffectable effectable))
         {
-            foreach (Effect effect in _effects)
+            foreach (EffectSO effect in _effects)
             {
                 effectable.ReceiveEffect(effect);
             }
