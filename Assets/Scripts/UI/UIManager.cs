@@ -5,7 +5,20 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager instance;
+    private static UIManager _instance;
+    public static UIManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+                Debug.LogError("UIManager: No instance of UIManager found in the scene.");
+            return _instance;
+        }
+        private set
+        {
+            _instance = value;
+        }
+    }
 
     [SerializeField] private Canvas _canvas;
     [Space(5)]
@@ -26,7 +39,7 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        _instance = this;
 
         ValidateConfiguration();
         InitializePanels();

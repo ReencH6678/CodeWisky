@@ -4,16 +4,31 @@ using UnityEngine;
 
 public class ItemSO : ScriptableObject
 {
-    public string ItemName;
-    public string Description;
+    [SerializeField] private string _itemName;
+    [SerializeField] private string _itemDescription;
     [Space(5)]
     public GameObject Prefab;
-    public Sprite Sprite;
+    [SerializeField] private Sprite _sprite;
     public bool IsConsumable = false;
-    public bool IsThroweable;
+
     // schlagen, werfen, ... (action)
     public virtual void Use(ActionContainer target, Vector2 direction) {}
     public virtual void Use(ActionContainer target) {}
     // Essen, Trinken
     public virtual void Consume(ActionContainer target) { }
+
+    public string GetItemName()
+    {
+        return string.IsNullOrWhiteSpace(_itemName) ? ItemSettings.MissingName : _itemName;
+    }
+
+    public string GetItemDescription()
+    {
+        return string.IsNullOrWhiteSpace(_itemDescription) ? ItemSettings.MissingDescription : _itemDescription;
+    }
+
+    public Sprite GetSprite() 
+    {
+        return (_sprite == null) ? ItemSettings.MissingTexture : _sprite;
+    }
 }

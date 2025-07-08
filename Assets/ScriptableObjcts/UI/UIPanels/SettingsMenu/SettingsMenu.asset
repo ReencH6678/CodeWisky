@@ -13,7 +13,11 @@ MonoBehaviour:
   m_Name: SettingsMenu
   m_EditorClassIdentifier: 
   panelName: Settings_Menu
-  panelObject: {fileID: 757846502066642961, guid: 10c797feabc2ee44299e0f450be8044d, type: 3}
+  panelObject: {fileID: 757846502066642961, guid: 10c797feabc2ee44299e0f450be8044d,
+    type: 3}
+  forcePanelVisible: 0
+  _defaultOpenPanel: {fileID: 11400000, guid: 151600a8d6dcd4d4bb2589ed7e76bed4, type: 2}
+  defaultOpenPanelIndex: 1
   childPanels:
   - {fileID: 11400000, guid: 151600a8d6dcd4d4bb2589ed7e76bed4, type: 2}
   - {fileID: 11400000, guid: 538be41664952df46a9f92a88bf303d9, type: 2}

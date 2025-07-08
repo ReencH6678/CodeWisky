@@ -8,6 +8,6 @@ public class UIPanel : MonoBehaviour
 
     private void Start()
     {
-        manager = UIManager.instance;
+        manager = UIManager.Instance;
     }
 }
