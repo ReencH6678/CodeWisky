@@ -20,6 +20,11 @@ public class Potion : MonoBehaviour, IThrowable
         _throwerObjectMover.Landed -= HandleObjectLanding;
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        HandleObjectLanding();
+    }
+
     public Potion SetEffects(List<EffectSO> effects)
     {
         foreach (EffectSO effect in effects)

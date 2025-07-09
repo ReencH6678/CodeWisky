@@ -5,7 +5,7 @@ using UnityEngine;
 public class Thrower : MonoBehaviour
 {
     [SerializeField] private float _maxThrowDistance;
-
+    [SerializeField] private float _heightRatio;
     [SerializeField] private float _ellipseRatio;
     [SerializeField] private Vector3 _offset;
     [SerializeField] private Color _debugColor;
@@ -17,13 +17,21 @@ public class Thrower : MonoBehaviour
             thowerableObject.transform.position = transform.position;
             thowerableObject.transform.rotation = Quaternion.identity;
             thowerableObject.layer = gameObject.layer;
+            thowerableObject.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = gameObject.GetComponent<SpriteRenderer>().sortingLayerName;
             thowerableObject.GetComponent<IThrowable>().StartMove(GetFallPoint(targetPosition));
         }
     }
 
     private Vector3 GetFallPoint(Vector3 mousePosition)
     {
-        return Trigonometry.CalculatePointOnCircle(transform.position + _offset, mousePosition, _maxThrowDistance, _ellipseRatio);
+        Vector3 fallPoint = Trigonometry.CalculatePointOnCircle(transform.position, mousePosition, _maxThrowDistance, _ellipseRatio);
+        Vector3 fallDirection = (fallPoint - transform.position).normalized;
+        RaycastHit2D hit = Physics2D.Raycast(fallPoint, Vector3.forward);
+
+        if (hit.collider.gameObject.layer < gameObject.layer || hit.collider.gameObject.TryGetComponent<Wall>(out _) && hit.collider != null)
+            fallPoint = new Vector3(fallPoint.x, fallPoint.y + (hit.collider.transform.position.y + _heightRatio) * fallDirection.y, fallPoint.z);
+
+        return fallPoint;
     }
 
     private void OnDrawGizmos()
@@ -42,6 +50,6 @@ public class Thrower : MonoBehaviour
             points[i] = center + new Vector3(x, y, 0);
         }
 
-        Handles.DrawAAConvexPolygon(points); // Закрашенный многоугольник
+        Handles.DrawAAConvexPolygon(points);
     }
 }

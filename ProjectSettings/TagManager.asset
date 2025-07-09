@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -11,7 +12,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - LVL0
   - LVL1
   - LVL2
   - LVL3
@@ -41,12 +42,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Layer 1
+  - name: LVL1
     uniqueID: 2425651459
     locked: 0
-  - name: Layer 2
+  - name: LVL2
     uniqueID: 4250941897
     locked: 0
-  - name: Layer 3
+  - name: LVL3
     uniqueID: 4189426099
     locked: 0
