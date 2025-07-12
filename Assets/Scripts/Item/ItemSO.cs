@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class ItemSO : ScriptableObject
 {
+    [Header("General Info")]
     [SerializeField] private string _itemName;
     [SerializeField] private string _itemDescription;
-    [Space(5)]
+    public InventoryCategory Category = InventoryCategory.Material;
+
+    [Header("Visual / Prefab")]
     public GameObject Prefab;
     [SerializeField] private Sprite _sprite;
+
+    [Header("Item Settings")]
     public bool IsConsumable = false;
+    public bool IsStackable = true;
 
     // schlagen, werfen, ... (action)
     public virtual void Use(ActionContainer target, Vector2 direction) {}
